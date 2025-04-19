@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TradingView Widget Signal</title>
+  <style>
+    body { font-family: Arial; padding: 1em; }
+    select { margin: 0.5em; padding: 0.4em; }
+  </style>
+</head>
+<body>
+  <h3>Choose Symbol & Timeframe</h3>
+  <label for="symbol">Symbol:</label>
+  <select id="symbol">
+    <option value="OANDA:XAUUSD">Gold (XAUUSD)</option>
+    <option value="BINANCE:BTCUSDT" selected>Bitcoin (BTCUSDT)</option>
+    <option value="OANDA:EURUSD">EUR/USD</option>
+    <option value="NASDAQ:AAPL">Apple (AAPL)</option>
+  </select>
+
+  <label for="interval">Interval:</label>
+  <select id="interval">
+    <option value="1m">1 Min</option>
+    <option value="5m" selected>5 Min</option>
+    <option value="15m">15 Min</option>
+  </select>
+
+  <div id="tv-container" style="margin-top: 20px;"></div>
+
+  <script>
+    const container = document.getElementById('tv-container');
+
+    function loadWidget(symbol, interval) {
+      container.innerHTML = ''; // clear previous widget
+
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js';
+      script.async = true;
+      script.innerHTML = JSON.stringify({
+        interval,
+        width: "100%",
+        isTransparent: false,
+        height: 500,
+        symbol,
+        showIntervalTabs: true,
+        locale: "en",
+        colorTheme: "light"
+      });
+
+      container.appendChild(script);
+    }
+
+    // Initial load
+    const symbolSel = document.getElementById('symbol');
+    const intervalSel = document.getElementById('interval');
+    loadWidget(symbolSel.value, intervalSel.value);
+
+    // Change events
+    symbolSel.addEventListener('change', () => {
+      loadWidget(symbolSel.value, intervalSel.value);
+    });
+
+    intervalSel.addEventListener('change', () => {
+      loadWidget(symbolSel.value, intervalSel.value);
+    });
+  </script>
+</body>
+</html>
